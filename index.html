@@ -17,8 +17,15 @@
   </head>
   <body>
     <div class="container">
-      <canvas id="gameCanvas" width="320" height="640"></canvas>
-      <p>Score: <span id="score">0</span></p>
+      <div class="canvas-wrapper">
+        <canvas id="gameCanvas" width="320" height="640"></canvas>
+        <div id="paused-message" class="paused-message"><p>Paused</p></div>
+      </div>
+      <div>
+        <p>Score: <span id="score">0</span></p>
+        <button id="start-button" class="start-button button">start</button>
+        <button id="pause-button" class="pause-button button">pause</button>
+      </div>
     </div>
   </body>
 </html>

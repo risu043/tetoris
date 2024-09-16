@@ -5,7 +5,12 @@ const BLOCK_SIZE = 32;
 const COLS = 10;
 const ROWS = 20;
 let score = 0;
+let dropSpeed = 1000;
+let isPaused = false;
 let displayScore = document.getElementById('score');
+let startButton = document.getElementById('start-button');
+let pauseButton = document.getElementById('pause-button');
+const pausedMessage = document.getElementById('paused-message');
 
 // テトリミノの色
 const COLORS = [
@@ -132,6 +137,10 @@ function collision() {
   return false;
 }
 
+function increaseSpeed() {
+  dropSpeed *= 0.9;
+}
+
 // 横の列が揃っているかをチェックし、揃ったら消す関数
 function checkFullRows() {
   let linesCleared = 0; // 消えた行数をカウント
@@ -156,11 +165,12 @@ function checkFullRows() {
     }
   }
 
-  // 消えた行に応じてスコアを加算（例: 1行=100点, 2行=300点, 3行=500点, 4行=800点）
+  // 消えた行に応じてスコアを加算
   if (linesCleared > 0) {
-    score += linesCleared * 100; // 単純なスコア計算
+    score += linesCleared * 100;
   }
   displayScore.textContent = score;
+  increaseSpeed();
 }
 
 function merge() {
@@ -248,9 +258,24 @@ function gameLoop() {
     return;
   }
 
+  if (isPaused) return;
+
   moveDown();
-  setTimeout(gameLoop, 1000);
+  setTimeout(gameLoop, dropSpeed);
 }
 
-init();
-gameLoop();
+startButton.addEventListener('click', () => {
+  init();
+  gameLoop();
+});
+
+pauseButton.addEventListener('click', () => {
+  if (!isPaused) {
+    isPaused = true;
+    pausedMessage.style.display = 'block';
+  } else {
+    isPaused = false;
+    pausedMessage.style.display = 'none';
+    gameLoop();
+  }
+});
