@@ -4,6 +4,8 @@ const ctx = canvas.getContext('2d');
 const BLOCK_SIZE = 32;
 const COLS = 10;
 const ROWS = 20;
+let score = 0;
+let displayScore = document.getElementById('score');
 
 // テトリミノの色
 const COLORS = [
@@ -55,6 +57,7 @@ function init() {
       board[r][c] = 0;
     }
   }
+  score = 0;
   newPiece();
 }
 
@@ -129,6 +132,37 @@ function collision() {
   return false;
 }
 
+// 横の列が揃っているかをチェックし、揃ったら消す関数
+function checkFullRows() {
+  let linesCleared = 0; // 消えた行数をカウント
+  for (let r = ROWS - 1; r >= 0; r--) {
+    let isFull = true;
+
+    for (let c = 0; c < COLS; c++) {
+      if (board[r][c] === 0) {
+        isFull = false;
+        break;
+      }
+    }
+
+    if (isFull) {
+      // 行が揃ったらその行を消す
+      board.splice(r, 1);
+      // 一番上に新しい空の行を追加する
+      board.unshift(new Array(COLS).fill(0));
+      // 行を詰めた後、次の行もチェックするためにrをインクリメント
+      r++;
+      linesCleared++; // 消えた行数をカウント
+    }
+  }
+
+  // 消えた行に応じてスコアを加算（例: 1行=100点, 2行=300点, 3行=500点, 4行=800点）
+  if (linesCleared > 0) {
+    score += linesCleared * 100; // 単純なスコア計算
+  }
+  displayScore.textContent = score;
+}
+
 function merge() {
   for (let r = 0; r < currentPiece.shape.length; r++) {
     for (let c = 0; c < currentPiece.shape[r].length; c++) {
@@ -137,6 +171,7 @@ function merge() {
       }
     }
   }
+  checkFullRows();
 }
 
 // キーボード入力を処理する関数
@@ -198,7 +233,21 @@ function rotatePiece() {
 
 document.addEventListener('keydown', handleKeyPress);
 
+function isGameOver() {
+  for (let c = 0; c < COLS; c++) {
+    if (board[0][c] !== 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function gameLoop() {
+  if (isGameOver()) {
+    alert('Game Over!');
+    return;
+  }
+
   moveDown();
   setTimeout(gameLoop, 1000);
 }
