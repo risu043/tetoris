@@ -1,7 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const BLOCK_SIZE = 32;
+// const BLOCK_SIZE = 32;
 const COLS = 10;
 const ROWS = 20;
 
@@ -61,6 +61,21 @@ const SHAPES = [
     [1, 1, 0],
   ],
 ];
+
+function adjustCanvasSize() {
+  if (window.innerWidth <= 768) {
+    canvas.width = 240;
+    canvas.height = 480;
+    BLOCK_SIZE = 24;
+  } else {
+    canvas.width = 320;
+    canvas.height = 640;
+    BLOCK_SIZE = 32;
+  }
+}
+
+window.addEventListener('resize', adjustCanvasSize);
+adjustCanvasSize();
 
 function init() {
   for (let r = 0; r < ROWS; r++) {
