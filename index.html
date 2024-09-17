@@ -7,9 +7,9 @@
     <title>Tetris</title>
     <style></style>
     <!-- favicon -->
-    <!-- <link rel="icon" type="image/png" href="favicon.png" /> -->
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
     <!--reset-->
-    <!-- <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" /> -->
+    <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
     <!--css-->
     <link rel="stylesheet" href="assets/style.css" />
     <!-- js -->
@@ -22,10 +22,16 @@
         <div id="paused-message" class="paused-message"><p>Paused</p></div>
       </div>
       <div>
-        <p>Score: <span id="score">0</span></p>
+        <p class="score-display">Score: <span id="score">0</span></p>
         <button id="start-button" class="start-button button">start</button>
         <button id="pause-button" class="pause-button button">pause</button>
       </div>
+    </div>
+    <div id="controls" class="controls">
+      <button id="move-left">←</button>
+      <button id="move-right">→</button>
+      <button id="move-down">↓</button>
+      <button id="rotate">⟳</button>
     </div>
   </body>
 </html>

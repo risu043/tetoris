@@ -4,27 +4,34 @@ const ctx = canvas.getContext('2d');
 const BLOCK_SIZE = 32;
 const COLS = 10;
 const ROWS = 20;
+
+let board = [];
+let currentPiece;
 let score = 0;
+let dropTimer;
 let dropSpeed = 1000;
 let isPaused = false;
+
 let displayScore = document.getElementById('score');
 let startButton = document.getElementById('start-button');
 let pauseButton = document.getElementById('pause-button');
 const pausedMessage = document.getElementById('paused-message');
 
+const moveLeftButton = document.getElementById('move-left');
+const moveRightButton = document.getElementById('move-right');
+const moveDownButton = document.getElementById('move-down');
+const rotateButton = document.getElementById('rotate');
+
 // テトリミノの色
 const COLORS = [
-  '#FF0000',
-  '#00FF00',
-  '#0000FF',
-  '#FFFF00',
-  '#00FFFF',
-  '#FF00FF',
-  '#FFA500',
+  '#cc0033',
+  '#66cc33',
+  '#0066ff',
+  '#ffcc00',
+  '#66ccff',
+  '#ff6699',
+  '#ff6600',
 ];
-
-let board = [];
-let currentPiece;
 
 // テトリミノの形
 const SHAPES = [
@@ -63,6 +70,7 @@ function init() {
     }
   }
   score = 0;
+  dropSpeed = 1000;
   newPiece();
 }
 
@@ -139,6 +147,9 @@ function collision() {
 
 function increaseSpeed() {
   dropSpeed *= 0.9;
+
+  clearTimeout(dropTimer);
+  dropTimer = setTimeout(gameLoop, dropSpeed);
 }
 
 // 横の列が揃っているかをチェックし、揃ったら消す関数
@@ -168,9 +179,9 @@ function checkFullRows() {
   // 消えた行に応じてスコアを加算
   if (linesCleared > 0) {
     score += linesCleared * 100;
+    increaseSpeed();
   }
   displayScore.textContent = score;
-  increaseSpeed();
 }
 
 function merge() {
@@ -201,6 +212,23 @@ function handleKeyPress(event) {
       break;
   }
 }
+
+// スマホ操作を処理する関数
+moveLeftButton.addEventListener('click', () => {
+  movePiece(-1, 0); // 左に移動
+});
+
+moveRightButton.addEventListener('click', () => {
+  movePiece(1, 0); // 右に移動
+});
+
+moveDownButton.addEventListener('click', () => {
+  movePiece(0, 1); // 下に移動
+});
+
+rotateButton.addEventListener('click', () => {
+  rotatePiece(); // 回転
+});
 
 // ピースを移動する関数
 function movePiece(dx, dy) {
@@ -261,21 +289,25 @@ function gameLoop() {
   if (isPaused) return;
 
   moveDown();
-  setTimeout(gameLoop, dropSpeed);
+
+  clearTimeout(dropTimer);
+  dropTimer = setTimeout(gameLoop, dropSpeed);
 }
 
 startButton.addEventListener('click', () => {
   init();
-  gameLoop();
+  clearTimeout(dropTimer);
+  dropTimer = setTimeout(gameLoop, dropSpeed);
 });
 
 pauseButton.addEventListener('click', () => {
   if (!isPaused) {
     isPaused = true;
     pausedMessage.style.display = 'block';
+    clearTimeout(dropTimer);
   } else {
     isPaused = false;
     pausedMessage.style.display = 'none';
-    gameLoop();
+    dropTimer = setTimeout(gameLoop, dropSpeed);
   }
 });
