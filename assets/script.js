@@ -1,7 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// const BLOCK_SIZE = 32;
 const COLS = 10;
 const ROWS = 20;
 
@@ -21,6 +20,14 @@ const moveLeftButton = document.getElementById('move-left');
 const moveRightButton = document.getElementById('move-right');
 const moveDownButton = document.getElementById('move-down');
 const rotateButton = document.getElementById('rotate');
+
+// const synth = new Tone.Synth().toDestination();
+// synth.volume.value = -30;
+
+// startButton.addEventListener('click', async () => {
+//   await Tone.start();
+//   synth.triggerAttackRelease('C4', '16n');
+// });
 
 // テトリミノの色
 const COLORS = [

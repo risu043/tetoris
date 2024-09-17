@@ -13,6 +13,7 @@
     <!--css-->
     <link rel="stylesheet" href="assets/style.css" />
     <!-- js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <script src="assets/script.js" defer></script>
   </head>
   <body>
@@ -25,13 +26,13 @@
         <p class="score-display">Score: <span id="score">0</span></p>
         <button id="start-button" class="start-button button">start</button>
         <button id="pause-button" class="pause-button button">pause</button>
+        <div id="controls" class="controls">
+          <button id="move-left">←</button>
+          <button id="move-right">→</button>
+          <button id="move-down">↓</button>
+          <button id="rotate">⟳</button>
+        </div>
       </div>
-    </div>
-    <div id="controls" class="controls">
-      <button id="move-left">←</button>
-      <button id="move-right">→</button>
-      <button id="move-down">↓</button>
-      <button id="rotate">⟳</button>
     </div>
   </body>
 </html>
