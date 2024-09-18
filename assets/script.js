@@ -21,13 +21,63 @@ const moveRightButton = document.getElementById('move-right');
 const moveDownButton = document.getElementById('move-down');
 const rotateButton = document.getElementById('rotate');
 
-// const synth = new Tone.Synth().toDestination();
-// synth.volume.value = -30;
+const synth = new Tone.Synth().toDestination();
+synth.volume.value = -35;
 
-// startButton.addEventListener('click', async () => {
-//   await Tone.start();
-//   synth.triggerAttackRelease('C4', '16n');
-// });
+const melodyBgm = [
+  { note: 'E4', duration: '4n' },
+  { note: 'B3', duration: '8n' },
+  { note: 'C4', duration: '8n' },
+  { note: 'D4', duration: '4n' },
+  { note: 'C4', duration: '8n' },
+  { note: 'B3', duration: '8n' },
+  { note: 'A3', duration: '4n' },
+  { note: 'A3', duration: '8n' },
+  { note: 'C3', duration: '8n' },
+  { note: 'E4', duration: '4n' },
+  { note: 'D4', duration: '8n' },
+  { note: 'C4', duration: '8n' },
+  { note: 'B3', duration: '4n' },
+  { note: 'B3', duration: '8n' },
+  { note: 'C4', duration: '8n' },
+  { note: 'D4', duration: '4n' },
+  { note: 'E4', duration: '4n' },
+  { note: 'C4', duration: '4n' },
+  { note: 'A3', duration: '4n' },
+  { note: 'A3', duration: '4n' },
+];
+
+const melodyClearLine = [
+  { note: 'C4', duration: '16n' },
+  { note: 'C4', duration: '16n' },
+  { note: 'C4', duration: '16n' },
+  { note: 'G4', duration: '8n' },
+];
+
+function durationToSeconds(duration) {
+  const bpm = Tone.Transport.bpm.value;
+  const secondsPerBeat = 60 / bpm;
+
+  switch (duration) {
+    case '4n':
+      return secondsPerBeat;
+    case '8n':
+      return secondsPerBeat / 2;
+    case '16n':
+      return secondsPerBeat / 4;
+    default:
+      return secondsPerBeat;
+  }
+}
+
+function playMelody(melody) {
+  let time = 0;
+
+  melody.forEach((note) => {
+    synth.triggerAttackRelease(note.note, note.duration, Tone.now() + time);
+    time += durationToSeconds(note.duration);
+  });
+}
 
 // テトリミノの色
 const COLORS = [
@@ -158,7 +208,6 @@ function collision() {
         let newY = currentPiece.y + r;
         let newX = currentPiece.x + c;
         if (newY >= ROWS || newX < 0 || newX >= COLS || board[newY][newX]) {
-          console.log('Collision detected at:', newY, newX);
           return true;
         }
       }
@@ -175,7 +224,7 @@ function increaseSpeed() {
 }
 
 // 横の列が揃っているかをチェックし、揃ったら消す関数
-function checkFullRows() {
+async function checkFullRows() {
   let linesCleared = 0; // 消えた行数をカウント
   for (let r = ROWS - 1; r >= 0; r--) {
     let isFull = true;
@@ -195,6 +244,9 @@ function checkFullRows() {
       // 行を詰めた後、次の行もチェックするためにrをインクリメント
       r++;
       linesCleared++; // 消えた行数をカウント
+
+      await Tone.start();
+      playMelody(melodyClearLine);
     }
   }
 
@@ -253,7 +305,7 @@ rotateButton.addEventListener('click', () => {
 });
 
 // ピースを移動する関数
-function movePiece(dx, dy) {
+async function movePiece(dx, dy) {
   currentPiece.x += dx;
   currentPiece.y += dy;
 
@@ -316,10 +368,16 @@ function gameLoop() {
   dropTimer = setTimeout(gameLoop, dropSpeed);
 }
 
-startButton.addEventListener('click', () => {
+function startGame() {
   init();
   clearTimeout(dropTimer);
   dropTimer = setTimeout(gameLoop, dropSpeed);
+}
+
+startButton.addEventListener('click', async () => {
+  startGame();
+  await Tone.start();
+  playMelody(melodyBgm);
 });
 
 pauseButton.addEventListener('click', () => {
