@@ -47,13 +47,6 @@ const melodyBgm = [
   { note: 'A3', duration: '4n' },
 ];
 
-const melodyClearLine = [
-  { note: 'C4', duration: '16n' },
-  { note: 'C4', duration: '16n' },
-  { note: 'C4', duration: '16n' },
-  { note: 'G4', duration: '8n' },
-];
-
 function durationToSeconds(duration) {
   const bpm = Tone.Transport.bpm.value;
   const secondsPerBeat = 60 / bpm;
@@ -224,7 +217,7 @@ function increaseSpeed() {
 }
 
 // 横の列が揃っているかをチェックし、揃ったら消す関数
-async function checkFullRows() {
+function checkFullRows() {
   let linesCleared = 0; // 消えた行数をカウント
   for (let r = ROWS - 1; r >= 0; r--) {
     let isFull = true;
@@ -244,9 +237,6 @@ async function checkFullRows() {
       // 行を詰めた後、次の行もチェックするためにrをインクリメント
       r++;
       linesCleared++; // 消えた行数をカウント
-
-      await Tone.start();
-      playMelody(melodyClearLine);
     }
   }
 
